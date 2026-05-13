@@ -2,6 +2,8 @@
 
 A simple and lightweight C/C++ library for changing terminal text colors using ANSI escape codes.
 
+<img width="1920" height="1080" alt="demonstration of color change lib" src="https://github.com/user-attachments/assets/f28fc0e4-cbb2-4b22-b9a2-0bbcabeb3394" />
+
 ## Features
 
 - Usable from both C and C++ projects.
