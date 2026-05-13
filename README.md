@@ -1,26 +1,29 @@
 # Change Colour Library
 
-A simple and lightweight C library for changing terminal text colors using ANSI escape codes.
+A simple and lightweight C/C++ library for changing terminal text colors using ANSI escape codes.
 
 ## Features
 
+- Usable from both C and C++ projects.
 - Change text color (8 standard ANSI colors).
 - Set text style (Normal or Bold).
 - Reset text formatting.
 - Easy to use helper functions for specific colors.
+- Builds a static library for easy linking.
 
 ## File Structure
 
-- `change_colour.h`: Header file with function prototypes and enums.
-- `change_colour.c`: Implementation of the color changing functions.
-- `main.c`: Demo program showcasing how to use the library.
-- `Makefile`: Build script for the demo program.
+- `lib/change_colour.h`: Header file with function prototypes and enums. Includes C++ `extern "C"` wrappers.
+- `lib/change_colour.c`: Implementation of the color changing functions.
+- `demo.c`: Demo program showcasing how to use the library in C.
+- `demo.cpp`: Demo program showcasing how to use the library in C++.
+- `Makefile`: Build script to compile the static library and both demo programs.
 
 ## Usage
 
-Include `change_colour.h` in your C program and link with `change_colour.c`.
+Include `change_colour.h` in your C or C++ program and link with the static library (`libchangecolour.a`).
 
-### Example
+### Example (C)
 
 ```c
 #include <stdio.h>
@@ -40,18 +43,44 @@ int main() {
 }
 ```
 
+### Example (C++)
+
+```cpp
+#include <iostream>
+#include "change_colour.h"
+
+int main() {
+    change_colour_to_red();
+    std::cout << "This is red!" << std::endl;
+
+    change_colour(COLOR_GREEN, STYLE_BOLD);
+    std::cout << "This is bold green!" << std::endl;
+
+    reset_colour();
+    std::cout << "Back to normal." << std::endl;
+
+    return 0;
+}
+```
+
 ## Compilation
 
-To compile the demo program:
+To compile the library and the demo programs:
 
 ```bash
 make
 ```
 
-To run the demo:
+To run the C demo:
 
 ```bash
 ./demo
+```
+
+To run the C++ demo:
+
+```bash
+./demo_cpp
 ```
 
 ## Cleaning up
