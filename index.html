@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Change Colour | High-Performance Terminal Styling</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #000000;
+            color: #e5e2e1;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .cyan-glow {
+            box-shadow: 0 0 20px rgba(0, 221, 221, 0.15);
+        }
+        .purple-glow {
+            box-shadow: 0 0 20px rgba(221, 183, 255, 0.15);
+        }
+        .syntax-keyword { color: #ddb7ff; }
+        .syntax-string { color: #00fbfb; }
+        .syntax-comment { color: #839493; }
+        .syntax-func { color: #fce442; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0e0e0e; }
+        ::-webkit-scrollbar-thumb { background: #353534; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00dddd; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "secondary-fixed-dim": "#ddb7ff",
+                "error": "#ffb4ab",
+                "surface-dim": "#131313",
+                "on-secondary-fixed-variant": "#6900b3",
+                "surface-container-low": "#1c1b1b",
+                "on-primary-fixed-variant": "#004f4f",
+                "tertiary-container": "#fce442",
+                "on-secondary-container": "#d6a9ff",
+                "on-primary-container": "#007070",
+                "outline-variant": "#3a4a49",
+                "on-error": "#690005",
+                "on-secondary-fixed": "#2c0051",
+                "on-tertiary": "#383100",
+                "on-tertiary-fixed-variant": "#504700",
+                "on-primary-fixed": "#002020",
+                "surface": "#131313",
+                "surface-container-high": "#2a2a2a",
+                "on-secondary": "#490080",
+                "surface-variant": "#353534",
+                "tertiary-fixed-dim": "#dec723",
+                "secondary-container": "#6f00be",
+                "background": "#131313",
+                "tertiary-fixed": "#fce442",
+                "on-tertiary-fixed": "#201c00",
+                "on-error-container": "#ffdad6",
+                "surface-container-lowest": "#0e0e0e",
+                "surface-bright": "#3a3939",
+                "error-container": "#93000a",
+                "outline": "#839493",
+                "on-surface": "#e5e2e1",
+                "primary": "#ffffff",
+                "tertiary": "#ffffff",
+                "secondary": "#ddb7ff",
+                "surface-tint": "#00dddd",
+                "primary-fixed": "#00fbfb",
+                "on-background": "#e5e2e1",
+                "surface-container-highest": "#353534",
+                "on-surface-variant": "#b9cac9",
+                "inverse-on-surface": "#313030",
+                "inverse-surface": "#e5e2e1",
+                "primary-container": "#00fbfb",
+                "surface-container": "#201f1f",
+                "primary-fixed-dim": "#00dddd",
+                "secondary-fixed": "#f0dbff",
+                "inverse-primary": "#006a6a",
+                "on-primary": "#003737"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+              },
+              "spacing": {
+                "margin-desktop": "32px",
+                "gutter": "16px",
+                "sidebar-width": "260px",
+                "unit": "4px",
+                "margin-mobile": "16px",
+                "stack-gap": "8px"
+              },
+              "fontFamily": {
+                "headline-md": ["Inter"],
+                "code-md": ["JetBrains Mono"],
+                "body-md": ["Inter"],
+                "headline-xl": ["Inter"],
+                "label-caps": ["Inter"],
+                "body-lg": ["Inter"],
+                "headline-lg": ["Inter"],
+                "body-sm": ["Inter"]
+              },
+              "fontSize": {
+                "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                "code-md": ["14px", { "lineHeight": "22px", "fontWeight": "450" }],
+                "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface-dim selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Anchor -->
+<header class="sticky top-0 z-50 w-full bg-surface/40 backdrop-blur-xl border-b border-white/5 shadow-sm">
+<div class="flex justify-between items-center w-full px-margin-desktop max-w-screen-2xl mx-auto h-16">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<span class="font-headline-md text-headline-md font-black tracking-tighter text-primary">CHANGE COLOUR</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary border-b-2 border-primary pb-1 font-body-sm transition-all duration-300" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-primary font-body-sm transition-all duration-300" href="#">Features</a>
+<a class="text-on-surface-variant hover:text-primary font-body-sm transition-all duration-300" href="#">Documentation</a>
+<a class="text-on-surface-variant hover:text-primary font-body-sm transition-all duration-300" href="#">Changelog</a>
+</nav>
+<div class="flex items-center gap-4">
+<a href="https://github.com/SanskarSontakke/Change-Colour-C-Lib" class="px-4 py-2 bg-primary-container text-on-primary-container font-label-caps text-label-caps rounded hover:brightness-110 active:scale-95 transition-all inline-block">GITHUB</a>
+</div>
+</div>
+</header>
+<main class="relative">
+<!-- Hero Section -->
+<section class="pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-screen-2xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+<div class="space-y-6">
+<div class="inline-flex items-center px-3 py-1 glass-panel rounded-full gap-2">
+<span class="w-2 h-2 rounded-full bg-surface-tint"></span>
+<span class="text-label-caps font-label-caps text-on-surface-variant">V1.2.0 STABLE RELEASE</span>
+</div>
+<h1 class="font-headline-xl text-[56px] leading-[1] md:text-[80px] font-black tracking-tight text-white">
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-fixed-dim to-secondary-fixed-dim">Change</span><br/>
+                    Colour
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
+                    A lightweight C/C++ terminal styling library engineered for high-performance console interfaces. Minimal overhead, maximum visual impact.
+                </p>
+<div class="flex flex-wrap gap-4 pt-4">
+<button class="bg-primary-container text-on-primary-container px-8 py-4 font-label-caps text-label-caps rounded flex items-center gap-2 hover:shadow-[0_0_20px_rgba(0,251,251,0.3)] transition-all">
+                        GET STARTED <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="border border-white/10 px-8 py-4 font-label-caps text-label-caps rounded hover:bg-white/5 transition-all">VIEW DOCS</button>
+</div>
+</div>
+<div class="relative group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 blur-3xl rounded-full opacity-50 group-hover:opacity-70 transition-opacity"></div>
+<div class="glass-panel p-2 rounded-xl border border-white/10 relative overflow-hidden shadow-2xl">
+<img alt="Change Colour Demo" class="w-full h-auto rounded-lg" src="change-color-demo.png"/>
+</div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="py-24 px-margin-mobile md:px-margin-desktop max-w-screen-2xl mx-auto">
+<h2 class="font-headline-lg text-headline-lg mb-12 text-center">Engineered for Precision</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Feature 1 -->
+<div class="glass-panel p-8 rounded-xl space-y-4 hover:border-primary-fixed-dim/30 transition-all group">
+<span class="material-symbols-outlined text-[40px] text-primary-fixed-dim" style="font-variation-settings: 'FILL' 1;">palette</span>
+<h3 class="font-headline-md text-headline-md">8 ANSI Colors</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Full support for the standard ANSI color palette across all major terminal emulators.</p>
+</div>
+<!-- Feature 2 -->
+<div class="glass-panel p-8 rounded-xl space-y-4 hover:border-secondary-fixed-dim/30 transition-all group">
+<span class="material-symbols-outlined text-[40px] text-secondary-fixed-dim" style="font-variation-settings: 'FILL' 1;">format_bold</span>
+<h3 class="font-headline-md text-headline-md">Bold Styling</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Emphasize critical information with bold, italic, and underline ANSI escape sequences.</p>
+</div>
+<!-- Feature 3 -->
+<div class="glass-panel p-8 rounded-xl space-y-4 hover:border-primary-fixed-dim/30 transition-all group">
+<span class="material-symbols-outlined text-[40px] text-primary-fixed-dim" style="font-variation-settings: 'FILL' 1;">developer_board</span>
+<h3 class="font-headline-md text-headline-md">C/C++ Native</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Header-only architecture for seamless integration into existing toolchains.</p>
+</div>
+<!-- Feature 4 -->
+<div class="glass-panel p-8 rounded-xl space-y-4 hover:border-secondary-fixed-dim/30 transition-all group">
+<span class="material-symbols-outlined text-[40px] text-secondary-fixed-dim" style="font-variation-settings: 'FILL' 1;">electric_bolt</span>
+<h3 class="font-headline-md text-headline-md">Instant Setup</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Zero dependencies. Just include the header and start styling your console.</p>
+</div>
+</div>
+</section>
+<!-- Code Playground -->
+<section class="py-24 bg-surface-container-lowest relative">
+<div class="px-margin-mobile md:px-margin-desktop max-w-screen-2xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-8">
+<h2 class="font-headline-lg text-headline-lg">Integration in Seconds</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Implementation is straightforward. Whether you're building a CLI tool or debugging a kernel module, Change Colour stays out of the way.</p>
+<ul class="space-y-4">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed-dim">check_circle</span>
+<span class="font-body-md text-body-md">Universal Linux/macOS support</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed-dim">check_circle</span>
+<span class="font-body-md text-body-md">Extremely low binary footprint</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed-dim">check_circle</span>
+<span class="font-body-md text-body-md">Thread-safe styling calls</span>
+</li>
+</ul>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden border border-white/10 shadow-2xl">
+<div class="flex items-center justify-between px-6 py-4 bg-surface-container-high border-b border-white/5">
+<div class="flex gap-2">
+<div class="w-3 h-3 rounded-full bg-error"></div>
+<div class="w-3 h-3 rounded-full bg-tertiary-container"></div>
+<div class="w-3 h-3 rounded-full bg-primary-container"></div>
+</div>
+<div class="flex gap-4">
+<button id="tab-c" class="font-label-caps text-label-caps text-primary border-b-2 border-primary-fixed-dim pb-1 transition-all">C SOURCE</button>
+<button id="tab-cpp" class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all">C++ SOURCE</button>
+</div>
+</div>
+<div class="p-8 font-code-md text-code-md overflow-x-auto min-h-[300px]">
+<div id="code-c" class="block">
+<pre><span class="syntax-keyword">#include</span> <span class="syntax-string">&lt;stdio.h&gt;</span>
+<span class="syntax-keyword">#include</span> <span class="syntax-string">"change_colour.h"</span>
+
+<span class="syntax-keyword">int</span> <span class="syntax-func">main</span>() {
+    <span class="syntax-comment">// Set terminal to high-intensity red</span>
+    <span class="syntax-func">change_colour_to_red</span>();
+    <span class="syntax-func">printf</span>(<span class="syntax-string">"This is red!\n"</span>);
+    
+    <span class="syntax-comment">// Restore default terminal settings</span>
+    <span class="syntax-func">reset_colour</span>();
+    
+    <span class="syntax-keyword">return</span> <span class="syntax-num">0</span>;
+}</pre>
+</div>
+<div id="code-cpp" class="hidden">
+<pre><span class="syntax-keyword">#include</span> <span class="syntax-string">&lt;iostream&gt;</span>
+<span class="syntax-keyword">#include</span> <span class="syntax-string">"change_colour.h"</span>
+
+<span class="syntax-keyword">int</span> <span class="syntax-func">main</span>() {
+    <span class="syntax-comment">// Set terminal to vibrant green</span>
+    <span class="syntax-func">change_colour_to_green</span>();
+    <span class="syntax-func">std::cout</span> &lt;&lt; <span class="syntax-string">"This is green!"</span> &lt;&lt; <span class="syntax-func">std::endl</span>;
+    
+    <span class="syntax-comment">// Restore default terminal settings</span>
+    <span class="syntax-func">reset_colour</span>();
+    
+    <span class="syntax-keyword">return</span> <span class="syntax-num">0</span>;
+}</pre>
+</div>
+</div>
+<div class="bg-black/40 p-4 border-t border-white/5 flex justify-between items-center">
+<span id="filename-display" class="text-body-sm text-on-surface-variant">main.c</span>
+<button class="text-primary-fixed-dim flex items-center gap-2 text-label-caps font-label-caps">
+<span class="material-symbols-outlined text-sm">content_copy</span> COPY
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- API Reference -->
+<section class="py-24 px-margin-mobile md:px-margin-desktop max-w-screen-2xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg">API Summary</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Simple, functional, and intuitive interface.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-8">
+<div class="glass-panel p-6 rounded-xl border-l-4 border-primary-fixed-dim">
+<code class="font-code-md text-primary block mb-2">change_colour(COLOR, STYLE)</code>
+<p class="font-body-sm text-on-surface-variant">Global function to switch terminal output to any supported color and style (Normal/Bold).</p>
+</div>
+<div class="glass-panel p-6 rounded-xl border-l-4 border-secondary-fixed-dim">
+<code class="font-code-md text-primary block mb-2">reset_colour()</code>
+<p class="font-body-sm text-on-surface-variant">Resets the terminal styling to the user's default environment settings.</p>
+</div>
+<div class="glass-panel p-6 rounded-xl border-l-4 border-tertiary-container">
+<code class="font-code-md text-primary block mb-2">change_colour_to_[color]()</code>
+<p class="font-body-sm text-on-surface-variant">Quick helper functions for all standard ANSI colors (Red, Green, Blue, etc.).</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-white/5 w-full py-12">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop max-w-screen-2xl mx-auto gap-stack-gap">
+<div class="space-y-4 text-center md:text-left">
+<span class="font-label-caps text-label-caps text-primary opacity-50 block uppercase tracking-widest">CHANGE COLOUR ENGINE</span>
+<p class="font-body-sm text-body-sm text-on-surface opacity-60">© 2024 Change Colour Engine. High-performance C++ utility.</p>
+</div>
+<div class="flex gap-8 mt-8 md:mt-0">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-sm" href="#">Documentation</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-sm" href="#">Changelog</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-sm" href="#">Community</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-sm" href="#">Security</a>
+</div>
+</div>
+</footer>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tabC = document.getElementById('tab-c');
+        const tabCpp = document.getElementById('tab-cpp');
+        const codeC = document.getElementById('code-c');
+        const codeCpp = document.getElementById('code-cpp');
+        const filenameDisplay = document.getElementById('filename-display');
+
+        tabC.addEventListener('click', () => {
+            tabC.classList.add('text-primary', 'border-b-2', 'border-primary-fixed-dim');
+            tabC.classList.remove('text-on-surface-variant');
+            tabCpp.classList.remove('text-primary', 'border-b-2', 'border-primary-fixed-dim');
+            tabCpp.classList.add('text-on-surface-variant');
+            codeC.classList.remove('hidden');
+            codeC.classList.add('block');
+            codeCpp.classList.add('hidden');
+            codeCpp.classList.remove('block');
+            filenameDisplay.textContent = 'main.c';
+        });
+
+        tabCpp.addEventListener('click', () => {
+            tabCpp.classList.add('text-primary', 'border-b-2', 'border-primary-fixed-dim');
+            tabCpp.classList.remove('text-on-surface-variant');
+            tabC.classList.remove('text-primary', 'border-b-2', 'border-primary-fixed-dim');
+            tabC.classList.add('text-on-surface-variant');
+            codeCpp.classList.remove('hidden');
+            codeCpp.classList.add('block');
+            codeC.classList.add('hidden');
+            codeC.classList.remove('block');
+            filenameDisplay.textContent = 'main.cpp';
+        });
+    });
+</script>
+</body></html>
